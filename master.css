@@ -15,7 +15,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 */
-{
+
+*{
   font-family: sans-serif;
 }
 body{
@@ -37,10 +38,9 @@ body{
   width: 80%;
   border-radius: 3px;
   padding: 5px 15px;
-  background: #fafafafa;
+  background: #f6f6f6;
 }
 .status{
-  background: #00a302;
   color: white;
   display: inline;
   padding: 10px 30px;
@@ -50,9 +50,14 @@ body{
   width: 100%;
   border: 1px solid #ddd;
   height: 30px;
-  background: linear-gradient(90deg, #bf2121 50%, #fafafafa 50%);
+  background: linear-gradient(90deg, #bf2121 0%, #f6f6f6 0%);
   color: black;
   text-align: center;
   font-size: 0.8em;
   line-height: 30px;
+}
+@media (max-width: 600px){
+  .outer{
+    width: 95%;
+  }
 }

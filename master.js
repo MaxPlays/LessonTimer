@@ -16,28 +16,35 @@ limitations under the License.
 
 */
 
-//var a = prompt("Enter end time").trim().split("-");
-var before = null;
-var to = null;
+$(document).ready(function(){
+  window.setInterval(function(){
+    var info = getInfo();
+    if(info.classification != "none"){
+      var c = new Date().getTime();
+      var v = ((c - info.start) / (info.end - info.start))*100;
 
-if(a.length == 1){
-  before = new Date();
-  to = new Date(before.getFullYear(), before.getMonth(), before.getDate(), a[0].split(":")[0], a[0].split(":")[1]).getTime() - before.getTime();
-}else{
-  var b = new Date();
-  before = new Date(b.getFullYear(), b.getMonth(), b.getDate(), a[0].split(":")[0], a[0].split(":")[1]);
-  to = new Date(before.getFullYear(), before.getMonth(), before.getDate(), a[1].split(":")[0], a[1].split(":")[1]).getTime() - before.getTime();
-}
+      $(".wrapper").css("background", "linear-gradient(90deg, #bf2121 " + v + "%, #fafafafa 0%)");
+      $(".wrapper").html(Math.round(v) + "%");
+      $(".status").html(info.name);
+      if(info.classification == "lesson"){
+        $(".status").css("background", "#00a302");
+      }else if(info.classification == "wait"){
+        $(".status").css("background", "#e0af0a");
+      }
+      var diff = Math.round((info.end - c) / 1000);
+      var m = Math.floor(diff/60);
+      var s = diff % 60;
+      $(".remaining").html((m < 10 ? "0" + m: m) + ":" + (s < 10 ? "0" + s: s));
+  }else{
+    $(".status").css("background", "#8e8e8e");
 
-window.setInterval(function(){
-  var v = ((new Date().getTime() - before.getTime()) / to) * 100;
-
-  document.getElementsByClassName("inner")[0].style.width = v + "%";
-  if(document.getElementById("c").checked){
-    document.getElementsByClassName("inner")[0].style.background = getRandomColour();
+    $(".wrapper").css("background", "linear-gradient(90deg, #bf2121 0%, #fafafafa 0%)");
+    $(".wrapper").html("-");
+    $(".status").html(info.name);
+    $(".remaining").html("-");
   }
-  document.getElementsByClassName("inner")[0].innerHTML = Math.round(v, 2) + "%";
-}, 100);
+  }, 0, 500);
+});
 
 function getRandomColour() {
   var letters = '0123456789ABCDEF';
@@ -50,18 +57,116 @@ function getRandomColour() {
 
 function getInfo(){
   var d = new Date();
-  var h = d.getHour();
-  var m = d.getMinute();
+  var h = d.getHours();
+  var m = d.getMinutes();
 
-  if(h == 7 && m >= 45){
-
-  }else if(h == 8 && m < 50){
-
-  }else if(h == 8 && m < 55){
-
-  }else if((h == 8 && m <= 59) | (h == 9 && m < 45)){
-
-  }else if(h == 9 && m <= 59){
-
+  var na = "";
+  var cl = "";
+  var st = 0;
+  var en = 0;
+  if(d.getDay() != 2 && d.getDay() != 3){
+    if(h == 7 && m >= 45){
+      na = "Waiting";
+      cl = "wait";
+      st = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 7, 45).getTime();
+      en = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 8, 0).getTime();
+    }else if(h == 8 && m < 50){
+      na = "Lesson 1";
+      cl = "lesson";
+      st = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 8, 0).getTime();
+      en = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 8, 50).getTime();
+    }else if(h == 8 && m < 55){
+      na = "Pause";
+      cl = "wait";
+      st = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 8, 50).getTime();
+      en = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 8, 55).getTime();
+    }else if((h == 8 && m <= 59) | (h == 9 && m < 45)){
+      na = "Lesson 2";
+      cl = "lesson";
+      st = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 8, 55).getTime();
+      en = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 9, 45).getTime();
+    }else if(h == 9 && m <= 59){
+      na = "Pause";
+      cl = "wait";
+      st = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 9, 45).getTime();
+      en = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 10, 0).getTime();
+    }else if(h == 10 && m < 50){
+      na = "Lesson 3";
+      cl = "lesson";
+      st = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 10, 0).getTime();
+      en = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 10, 50).getTime();
+    }else if(h == 10 && m < 55){
+      na = "Pause";
+      cl = "wait";
+      st = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 10, 50).getTime();
+      en = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 10, 55).getTime();
+    }else if((h == 10 && m <= 59) | (h == 11 && m < 45)){
+      na = "Lesson 4";
+      cl = "lesson";
+      st = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 10, 55).getTime();
+      en = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 11, 45).getTime();
+    }else if(h == 11 && m < 50){
+      na = "Pause";
+      cl = "wait";
+      st = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 11, 45).getTime();
+      en = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 11, 50).getTime();
+    }else if((h == 11 && m <= 59) | (h == 12 && m < 45)){
+      na = "Lesson 5";
+      cl = "lesson";
+      st = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 11, 55).getTime();
+      en = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12, 45).getTime();
+    }else if(h == 12 && m < 50){
+      na = "Pause";
+      cl = "wait";
+      st = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12, 45).getTime();
+      en = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12, 50).getTime();
+    }else if((h == 12 && m <= 59) | (h == 13 && m < 40)){
+      na = "Lesson 6";
+      cl = "lesson";
+      st = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12, 50).getTime();
+      en = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 13, 40).getTime();
+    }else if((h == 13 && m <= 59) | (h == 14 && m < 30)){
+      na = "Lesson 7";
+      cl = "lesson";
+      st = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 13, 40).getTime();
+      en = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 14, 30).getTime();
+    }else if((h == 14 && m <= 59) | (h == 15 && m < 20)){
+      na = "Lesson 8";
+      cl = "lesson";
+      st = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 14, 30).getTime();
+      en = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 15, 20).getTime();
+    }else if((h == 15 && m <= 59) | (h == 16 && m < 10)){
+      na = "Lesson 9";
+      cl = "lesson";
+      st = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 15, 20).getTime();
+      en = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 16, 10).getTime();
+    }else if(h == 16 && m <= 59){
+      na = "Lesson 10";
+      cl = "lesson";
+      st = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 16, 10).getTime();
+      en = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 17, 0).getTime();
+    }else if(h == 17 && m < 50){
+      na = "Lesson 11";
+      cl = "lesson";
+      st = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 17, 0).getTime();
+      en = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 17, 50).getTime();
+    }else if((h == 17 && m <= 59) | (h == 18 && m < 40)){
+      na = "Lesson 12";
+      cl = "lesson";
+      st = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 17, 50).getTime();
+      en = new Date(d.getFullYear(), d.getMonth(), d.getDate(), 18, 40).getTime();
+    }else{
+      na = "None";
+      cl = "none";
+    }
+  }else{
+    na = "None";
+    cl = "none";
   }
+  return {
+    name: na,
+    classification: cl,
+    start: st,
+    end: en
+  };
 }
