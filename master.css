@@ -58,6 +58,6 @@ body{
 }
 @media (max-width: 600px){
   .outer{
-    width: 95%;
+    width: 90%;
   }
 }
