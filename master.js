@@ -64,7 +64,7 @@ function getInfo(){
   var cl = "";
   var st = 0;
   var en = 0;
-  if(d.getDay() != 2 && d.getDay() != 3){
+  if(d.getDay() != 0 && d.getDay() != 6){
     if(h == 7 && m >= 45){
       na = "Waiting";
       cl = "wait";
